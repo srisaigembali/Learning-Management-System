@@ -1,13 +1,60 @@
 import { Route, Routes } from "react-router-dom";
 import AuthPage from "./pages/auth/index.jsx";
+import RouteGuard from "./components/route-guard";
+import { useContext } from "react";
+import { AuthContext } from "./context/auth-context";
+import InstructorDashboard from "./pages/instructor";
+import StudentHomePage from "./pages/student/home";
+import StudentViewCommonLayout from "./components/student-view/CommonLayout";
+import NotFoundPage from "./pages/not-found/index.jsx";
 
 function App() {
+	const { auth } = useContext(AuthContext);
 	return (
 		<>
 			<Routes>
 				<Route
 					path='/auth'
-					element={<AuthPage />}
+					element={
+						<RouteGuard
+							element={<AuthPage />}
+							authenticated={auth?.isAuthenticated}
+							user={auth?.user}
+						/>
+					}
+				/>
+				<Route
+					path='/instructor'
+					element={
+						<RouteGuard
+							element={<InstructorDashboard />}
+							authenticated={auth?.isAuthenticated}
+							user={auth?.user}
+						/>
+					}
+				/>
+				<Route
+					path='/'
+					element={
+						<RouteGuard
+							element={<StudentViewCommonLayout />}
+							authenticated={auth?.isAuthenticated}
+							user={auth?.user}
+						/>
+					}
+				>
+					<Route
+						path=''
+						element={<StudentHomePage />}
+					/>
+					<Route
+						path='home'
+						element={<StudentHomePage />}
+					/>
+				</Route>
+				<Route
+					path='*'
+					element={<NotFoundPage />}
 				/>
 			</Routes>
 		</>
