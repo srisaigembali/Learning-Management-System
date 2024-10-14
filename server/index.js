@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import mongoose from "mongoose";
+import authRouter from "./routes/authRoutes.js";
 
 dotenv.config();
 
@@ -9,11 +10,13 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 
-cors({
-	origin: process.env.CLIENT_URL,
-	methods: ["GET", "POST", "PUT", "DELETE"],
-	allowHeaders: ["Content-Type", "Authorization"],
-});
+app.use(
+	cors({
+		origin: process.env.CLIENT_URL,
+		methods: ["GET", "POST", "PUT", "DELETE"],
+		allowHeaders: ["Content-Type", "Authorization"],
+	})
+);
 
 app.use(express.json());
 
@@ -31,6 +34,9 @@ app.use((err, req, res, next) => {
 		message: "something went wrong",
 	});
 });
+
+// routes configuration
+app.use("/auth", authRouter);
 
 app.listen(PORT, () => {
 	console.log(`server is running on port ${PORT}`);

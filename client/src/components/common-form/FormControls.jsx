@@ -6,6 +6,7 @@ import { Textarea } from "../ui/textarea";
 const FormControls = ({ formControls = [], formData, setFormData }) => {
 	const renderComponentByType = (controlItem) => {
 		let element = null;
+		const currentControlItemValue = formData[controlItem.name] || "";
 
 		switch (controlItem.componentType) {
 			case "input":
@@ -15,6 +16,14 @@ const FormControls = ({ formControls = [], formData, setFormData }) => {
 						name={controlItem.name}
 						placeholder={controlItem.placeholder}
 						type={controlItem.type}
+						value={currentControlItemValue}
+						onChange={(e) =>
+							setFormData({
+								...formData,
+								[controlItem.name]: e.target.value,
+							})
+						}
+						autoComplete={controlItem.name === "password" ? "current-password" : controlItem.name}
 					/>
 				);
 				break;
@@ -24,12 +33,27 @@ const FormControls = ({ formControls = [], formData, setFormData }) => {
 						id={controlItem.name}
 						name={controlItem.name}
 						placeholder={controlItem.placeholder}
+						value={currentControlItemValue}
+						onChange={(e) =>
+							setFormData({
+								...formData,
+								[controlItem.name]: e.target.value,
+							})
+						}
 					/>
 				);
 				break;
 			case "select":
 				element = (
-					<Select>
+					<Select
+						value={currentControlItemValue}
+						onValueChange={(value) =>
+							setFormData({
+								...formData,
+								[controlItem.name]: value,
+							})
+						}
+					>
 						<SelectTrigger className='w-full'>
 							<SelectValue placeholder={controlItem.label} />
 						</SelectTrigger>
@@ -55,6 +79,13 @@ const FormControls = ({ formControls = [], formData, setFormData }) => {
 						name={controlItem.name}
 						placeholder={controlItem.placeholder}
 						type={controlItem.type}
+						value={currentControlItemValue}
+						onChange={(e) =>
+							setFormData({
+								...formData,
+								[controlItem.name]: e.target.value,
+							})
+						}
 					/>
 				);
 				break;

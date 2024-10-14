@@ -1,7 +1,14 @@
 import { Button } from "../ui/button";
 import FormControls from "./FormControls";
 
-const CommonForm = ({ handleSubmit, buttonText, formControls, formData, setFormData }) => {
+const CommonForm = ({
+	formControls,
+	buttonText,
+	formData,
+	setFormData,
+	isButtonDisabled,
+	handleSubmit,
+}) => {
 	return (
 		<form onSubmit={handleSubmit}>
 			{/* render form controls here */}
@@ -13,6 +20,7 @@ const CommonForm = ({ handleSubmit, buttonText, formControls, formData, setFormD
 			<Button
 				type='submit'
 				className='mt-5 w-full'
+				disabled={isButtonDisabled}
 			>
 				{buttonText || "Submit"}
 			</Button>

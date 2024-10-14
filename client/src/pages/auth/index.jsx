@@ -2,15 +2,38 @@ import CommonForm from "@/components/common-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { signInFormControls, signUpFormControls } from "@/config";
+import { AuthContext } from "@/context/auth-context";
 import { GraduationCap } from "lucide-react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
 const AuthPage = () => {
 	const [activeTab, setActiveTab] = useState("signin");
 
+	const {
+		signInFormData,
+		setSignInFormData,
+		signUpFormData,
+		setSignUpFormData,
+		handleRegisterUser,
+		handleLoginUser,
+	} = useContext(AuthContext);
+
 	const handleTabChange = (value) => {
 		setActiveTab(value);
+	};
+
+	const checkIfSignInFormIsValid = () => {
+		return signInFormData && signInFormData.email !== "" && signInFormData.password !== "";
+	};
+
+	const checkIfSignUpFormIsValid = () => {
+		return (
+			signUpFormData &&
+			signUpFormData.username !== "" &&
+			signUpFormData.email !== "" &&
+			signUpFormData.password !== ""
+		);
 	};
 
 	return (
@@ -47,6 +70,10 @@ const AuthPage = () => {
 								<CommonForm
 									formControls={signInFormControls}
 									buttonText={"Signin"}
+									formData={signInFormData}
+									setFormData={setSignInFormData}
+									isButtonDisabled={!checkIfSignInFormIsValid()}
+									handleSubmit={handleLoginUser}
 								/>
 							</CardContent>
 						</Card>
@@ -61,6 +88,10 @@ const AuthPage = () => {
 								<CommonForm
 									formControls={signUpFormControls}
 									buttonText={"Signup"}
+									formData={signUpFormData}
+									setFormData={setSignUpFormData}
+									isButtonDisabled={!checkIfSignUpFormIsValid()}
+									handleSubmit={handleRegisterUser}
 								/>
 							</CardContent>
 						</Card>
