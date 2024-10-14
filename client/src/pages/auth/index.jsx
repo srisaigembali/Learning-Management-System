@@ -1,4 +1,7 @@
+import CommonForm from "@/components/common-form";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { signInFormControls, signUpFormControls } from "@/config";
 import { GraduationCap } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -32,8 +35,36 @@ const AuthPage = () => {
 						<TabsTrigger value='signin'>Sign In</TabsTrigger>
 						<TabsTrigger value='signup'>Sign Up</TabsTrigger>
 					</TabsList>
-					<TabsContent value='signin'>Signin</TabsContent>
-					<TabsContent value='signup'>Signup</TabsContent>
+					<TabsContent value='signin'>
+						<Card className='p-6 space-y-2'>
+							<CardHeader>
+								<CardTitle>Sign into your account</CardTitle>
+								<CardDescription>
+									Enter your email and password to access your account
+								</CardDescription>
+							</CardHeader>
+							<CardContent className='space-y-2'>
+								<CommonForm
+									formControls={signInFormControls}
+									buttonText={"Signin"}
+								/>
+							</CardContent>
+						</Card>
+					</TabsContent>
+					<TabsContent value='signup'>
+						<Card className='p-6 space-y-2'>
+							<CardHeader>
+								<CardTitle>Create a new account</CardTitle>
+								<CardDescription>Enter your details to get started</CardDescription>
+							</CardHeader>
+							<CardContent className='space-y-2'>
+								<CommonForm
+									formControls={signUpFormControls}
+									buttonText={"Signup"}
+								/>
+							</CardContent>
+						</Card>
+					</TabsContent>
 				</Tabs>
 			</div>
 		</div>
