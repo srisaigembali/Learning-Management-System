@@ -4,9 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import VideoPlayer from "@/components/video-player";
 import { courseCurriculumInitialFormData } from "@/config";
 import { InstructorContext } from "@/context/instructor-context";
-import { mediaUploadService } from "@/services";
+import { mediaDeleteService, mediaUploadService } from "@/services";
 import { useContext } from "react";
 
 const CourseCurriculum = () => {
@@ -70,13 +71,57 @@ const CourseCurriculum = () => {
 		}
 	};
 
+	const handleReplaceVideo = async (currentIndex) => {
+		let copyCourseCurriculumFormData = [...courseCurriculumFormData];
+		const getCurrentVideoPublicId = copyCourseCurriculumFormData[currentIndex]?.public_id;
+
+		const response = await mediaDeleteService(getCurrentVideoPublicId);
+
+		if (response?.success) {
+			copyCourseCurriculumFormData[currentIndex] = {
+				...copyCourseCurriculumFormData[currentIndex],
+				videoUrl: "",
+				public_id: "",
+			};
+			setCourseCurriculumFormData(copyCourseCurriculumFormData);
+		}
+	};
+
+	const handleDeleteLecture = async (currentIndex) => {
+		let copyCourseCurriculumFormData = [...courseCurriculumFormData];
+		const getCurrentSelectedVideoPublicId = copyCourseCurriculumFormData[currentIndex]?.public_id;
+
+		const response = await mediaDeleteService(getCurrentSelectedVideoPublicId);
+
+		if (response?.success) {
+			copyCourseCurriculumFormData = copyCourseCurriculumFormData.filter(
+				(_, index) => index !== currentIndex
+			);
+
+			setCourseCurriculumFormData(copyCourseCurriculumFormData);
+		}
+	};
+
+	const isCourseCurriculumFormDataValid = () => {
+		return courseCurriculumFormData.every((item) => {
+			return (
+				item && typeof item === "object" && item.title.trim() !== "" && item.videoUrl.trim() !== ""
+			);
+		});
+	};
+
 	return (
 		<Card>
 			<CardHeader>
 				<CardTitle>Create Course Curriculum</CardTitle>
 			</CardHeader>
 			<CardContent>
-				<Button onClick={handleAddLecture}>Add Lecture</Button>
+				<Button
+					onClick={handleAddLecture}
+					disabled={!isCourseCurriculumFormDataValid() || mediaUploadProgress}
+				>
+					Add Lecture
+				</Button>
 				{mediaUploadProgress ? (
 					<MediaProgressBar
 						isUploading={mediaUploadProgress}
@@ -108,12 +153,29 @@ const CourseCurriculum = () => {
 								</div>
 							</div>
 							<div className='mt-6'>
-								<Input
-									type='file'
-									accept='video/*'
-									className='mb-4'
-									onChange={(event) => handleSingleLectureUpload(event, index)}
-								/>
+								{courseCurriculumFormData[index]?.videoUrl ? (
+									<div className='flex gap-3'>
+										<VideoPlayer
+											url={courseCurriculumFormData[index]?.videoUrl}
+											width='450px'
+											height='200px'
+										/>
+										<Button onClick={() => handleReplaceVideo(index)}>Replace Video</Button>
+										<Button
+											className='bg-red-900'
+											onClick={() => handleDeleteLecture(index)}
+										>
+											Delete Lecture
+										</Button>
+									</div>
+								) : (
+									<Input
+										type='file'
+										accept='video/*'
+										className='mb-4'
+										onChange={(event) => handleSingleLectureUpload(event, index)}
+									/>
+								)}
 							</div>
 						</div>
 					))}
