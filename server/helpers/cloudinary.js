@@ -3,9 +3,9 @@ import cloudinary from "cloudinary";
 const cloud = cloudinary.v2;
 
 cloud.config({
-	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-	api_key: process.env.CLOUDINARY_API_KEY,
-	api_secret: process.env.CLOUDINARY_API_SECRET,
+	cloud_name: "degjnwiah",
+	api_key: "281334551794812",
+	api_secret: "xX3iX9ahYRNaa1gHenYaAkR8d3U",
 });
 
 export const uploadMediaToCloudinary = async (filePath) => {

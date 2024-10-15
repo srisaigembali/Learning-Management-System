@@ -1,13 +1,15 @@
 import express from "express";
 import multer from "multer";
-import { delteMediaFromCloudinary, uploadMediaToCloudinary } from "../../helpers/cloudinary";
+import { delteMediaFromCloudinary, uploadMediaToCloudinary } from "../../helpers/cloudinary.js";
 
 const router = express.Router();
 const upload = multer({ dest: "uploads/" });
 
 router.post("/upload", upload.single("file"), async (req, res) => {
 	try {
-		const result = await uploadMediaToCloudinary(req.file.path);
+		const result = await uploadMediaToCloudinary(req.file.path, {
+			timeout: 60000,
+		});
 		res.status(200).json({
 			success: true,
 			data: result,
