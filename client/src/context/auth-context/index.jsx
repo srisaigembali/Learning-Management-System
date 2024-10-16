@@ -2,6 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { initialSignInFormData, initialSignUpFormData } from "@/config";
 import { checkAuthService, loginUserService, registerUserService } from "@/services";
 import { createContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext(null);
 
@@ -13,10 +14,12 @@ export default function AuthProvider({ children }) {
 		user: null,
 	});
 	const [loading, setLoading] = useState(true);
+	const navigate = useNavigate();
 
 	const handleRegisterUser = async (e) => {
 		e.preventDefault();
 		const data = await registerUserService(signUpFormData);
+		navigate("/");
 	};
 
 	const handleLoginUser = async (e) => {
