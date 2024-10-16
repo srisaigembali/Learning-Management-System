@@ -1,9 +1,10 @@
 import MediaProgressBar from "@/components/media-progress-bar";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { InstructorContext } from "@/context/instructor-context";
-import { mediaUploadService } from "@/services";
+import { mediaDeleteService, mediaUploadService } from "@/services";
 import { useContext } from "react";
 
 const CourseSettings = () => {
@@ -39,7 +40,22 @@ const CourseSettings = () => {
 		}
 	};
 
-	console.log(courseLandingFormData);
+	const handleReplaceImage = async () => {
+		let copyCourseLandingFormData = courseLandingFormData;
+		const getCurrentImageUrl = copyCourseLandingFormData?.image;
+
+		const getCurrentImageId = getCurrentImageUrl.split("/")[-1];
+
+		const response = await mediaDeleteService(getCurrentImageId);
+
+		if (response?.success) {
+			copyCourseLandingFormData = {
+				...copyCourseLandingFormData,
+				image: "",
+			};
+			setCourseLandingFormData(copyCourseLandingFormData);
+		}
+	};
 
 	return (
 		<Card>
@@ -56,10 +72,18 @@ const CourseSettings = () => {
 			</div>
 			<CardContent>
 				{courseLandingFormData?.image ? (
-					<img
-						src={courseLandingFormData?.image}
-						alt='course-img'
-					/>
+					<>
+						<Button
+							onClick={() => handleReplaceImage()}
+							className='mb-5'
+						>
+							Replace Image
+						</Button>
+						<img
+							src={courseLandingFormData?.image}
+							alt='course-img'
+						/>
+					</>
 				) : (
 					<div className='flex flex-col gap-3'>
 						<Label>Upload Course Image</Label>
