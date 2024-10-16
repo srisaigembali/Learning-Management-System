@@ -4,6 +4,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import authRouter from "./routes/authRoutes.js";
 import mediaRouter from "./routes/instructor-routes/mediaRoutes.js";
+import courseRouter from "./routes/instructor-routes/courseRoutes.js";
 
 dotenv.config();
 
@@ -39,6 +40,7 @@ app.use((err, req, res, next) => {
 // routes configuration
 app.use("/auth", authRouter);
 app.use("/media", mediaRouter);
+app.use("/instructor/course", courseRouter);
 
 app.listen(PORT, () => {
 	console.log(`server is running on port ${PORT}`);
