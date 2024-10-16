@@ -7,9 +7,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { courseCurriculumInitialFormData, courseLandingInitialFormData } from "@/config";
 import { AuthContext } from "@/context/auth-context";
 import { InstructorContext } from "@/context/instructor-context";
-import { addNewCourseService } from "@/services";
-import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import {
+	addNewCourseService,
+	fetchInstructorCourseDetailsService,
+	updateCourseService,
+} from "@/services";
+import { useContext, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 const AddNewCoursePage = () => {
 	const {
@@ -17,9 +21,12 @@ const AddNewCoursePage = () => {
 		courseCurriculumFormData,
 		setCourseLandingFormData,
 		setCourseCurriculumFormData,
+		currentEditedCourseId,
+		setCurrentEditedCourseId,
 	} = useContext(InstructorContext);
 	const { auth } = useContext(AuthContext);
 	const navigate = useNavigate();
+	const params = useParams();
 
 	const isEmpty = (value) => {
 		if (Array.isArray(value)) {
@@ -59,15 +66,42 @@ const AddNewCoursePage = () => {
 			isPublished: true,
 		};
 
-		const response = await addNewCourseService(courseFinalFormData);
+		const response =
+			currentEditedCourseId !== null
+				? await updateCourseService(currentEditedCourseId, courseFinalFormData)
+				: await addNewCourseService(courseFinalFormData);
 		if (response?.success) {
 			setCourseLandingFormData(courseLandingInitialFormData);
 			setCourseCurriculumFormData(courseCurriculumInitialFormData);
+			setCurrentEditedCourseId(null);
 			navigate(-1);
 		}
-
-		console.log(courseFinalFormData, "courseFinalFormData");
 	};
+
+	const fetchCurrentCourseDetails = async () => {
+		const response = await fetchInstructorCourseDetailsService(currentEditedCourseId);
+		if (response?.success) {
+			const setCourseFormData = Object.keys(courseLandingInitialFormData).reduce((acc, key) => {
+				acc[key] = response?.data[key] || courseLandingInitialFormData[key];
+				return acc;
+			}, {});
+
+			setCourseLandingFormData(setCourseFormData);
+			setCourseCurriculumFormData(response?.data?.curriculum);
+		}
+	};
+
+	useEffect(() => {
+		if (currentEditedCourseId) {
+			fetchCurrentCourseDetails();
+		}
+	}, [currentEditedCourseId]);
+
+	useEffect(() => {
+		if (params) {
+			setCurrentEditedCourseId(params?.courseId);
+		}
+	}, [params?.courseId]);
 
 	return (
 		<div className='container mx-auto p-4'>

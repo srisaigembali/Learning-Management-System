@@ -9,10 +9,15 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { courseCurriculumInitialFormData, courseLandingInitialFormData } from "@/config";
+import { InstructorContext } from "@/context/instructor-context";
 import { Delete, Edit } from "lucide-react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 const InstructorCourses = ({ listOfCourses }) => {
+	const { setCourseLandingFormData, setCourseCurriculumFormData, setCurrentEditedCourseId } =
+		useContext(InstructorContext);
 	const navigate = useNavigate();
 
 	return (
@@ -21,7 +26,12 @@ const InstructorCourses = ({ listOfCourses }) => {
 				<CardTitle className='text-3xl font-extrabold'>All Courses</CardTitle>
 				<Button
 					className='p-6'
-					onClick={() => navigate("/instructor/create-course")}
+					onClick={() => {
+						setCurrentEditedCourseId(null);
+						setCourseLandingFormData(courseLandingInitialFormData);
+						setCourseCurriculumFormData(courseCurriculumInitialFormData);
+						navigate("/instructor/create-course");
+					}}
 				>
 					Create New Course
 				</Button>
@@ -34,7 +44,7 @@ const InstructorCourses = ({ listOfCourses }) => {
 								<TableHead>Course</TableHead>
 								<TableHead>Students</TableHead>
 								<TableHead>Revenue</TableHead>
-								<TableHead className='text-right'>Amount</TableHead>
+								<TableHead>Actions</TableHead>
 							</TableRow>
 						</TableHeader>
 						<TableBody>
@@ -44,10 +54,15 @@ const InstructorCourses = ({ listOfCourses }) => {
 											<TableCell className='font-medium'>{course?.title}</TableCell>
 											<TableCell>{course?.students?.length}</TableCell>
 											<TableCell>$ {course?.pricing}</TableCell>
-											<TableCell className='text-right'>
+											<TableCell>
 												<Button
 													variant='ghost'
 													size='sm'
+													onClick={() => {
+														setCurrentEditedCourseId(course?._id);
+														navigate(`/instructor/edit-course/${course?._id}`);
+													}}
+													className='ps-0'
 												>
 													<Edit className='h-6 w-6' />
 												</Button>
