@@ -8,6 +8,7 @@ import StudentViewCommonLayout from "./components/student-view/CommonLayout";
 import NotFoundPage from "./pages/not-found/index.jsx";
 import InstructorDashboardPage from "./pages/instructor";
 import AddNewCoursePage from "./pages/instructor/AddNewCourse.jsx";
+import StudentCoursesPage from "./pages/student/courses/index.jsx";
 
 function App() {
 	const { auth } = useContext(AuthContext);
@@ -71,6 +72,10 @@ function App() {
 					<Route
 						path='home'
 						element={<StudentHomePage />}
+					/>
+					<Route
+						path='courses'
+						element={<StudentCoursesPage />}
 					/>
 				</Route>
 				<Route

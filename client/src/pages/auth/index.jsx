@@ -69,7 +69,7 @@ const AuthPage = () => {
 							<CardContent className='space-y-2'>
 								<CommonForm
 									formControls={signInFormControls}
-									buttonText={"Signin"}
+									buttonText={"Sign In"}
 									formData={signInFormData}
 									setFormData={setSignInFormData}
 									isButtonDisabled={!checkIfSignInFormIsValid()}
@@ -87,7 +87,7 @@ const AuthPage = () => {
 							<CardContent className='space-y-2'>
 								<CommonForm
 									formControls={signUpFormControls}
-									buttonText={"Signup"}
+									buttonText={"Sign Up"}
 									formData={signUpFormData}
 									setFormData={setSignUpFormData}
 									isButtonDisabled={!checkIfSignUpFormIsValid()}

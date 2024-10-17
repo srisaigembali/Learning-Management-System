@@ -73,8 +73,8 @@ export const mediaBulkUploadService = async (formData, onProgressCallback) => {
 	return data;
 };
 
-export const fetchStudentCourseListService = async () => {
-	const { data } = await axiosInstance.get("/student/course/get");
+export const fetchStudentCourseListService = async (query) => {
+	const { data } = await axiosInstance.get(`/student/course/get?${query}`);
 
 	return data;
 };

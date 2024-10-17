@@ -67,7 +67,7 @@ const AddNewCoursePage = () => {
 		};
 
 		const response =
-			currentEditedCourseId !== null
+			currentEditedCourseId !== null && currentEditedCourseId !== undefined
 				? await updateCourseService(currentEditedCourseId, courseFinalFormData)
 				: await addNewCourseService(courseFinalFormData);
 		if (response?.success) {
