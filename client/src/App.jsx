@@ -9,6 +9,7 @@ import NotFoundPage from "./pages/not-found/index.jsx";
 import InstructorDashboardPage from "./pages/instructor";
 import AddNewCoursePage from "./pages/instructor/AddNewCourse.jsx";
 import StudentCoursesPage from "./pages/student/courses/index.jsx";
+import StudentCourseDetailsPage from "./pages/student/course-details/index.jsx";
 
 function App() {
 	const { auth } = useContext(AuthContext);
@@ -76,6 +77,10 @@ function App() {
 					<Route
 						path='courses'
 						element={<StudentCoursesPage />}
+					/>
+					<Route
+						path='course/details/:id'
+						element={<StudentCourseDetailsPage />}
 					/>
 				</Route>
 				<Route
