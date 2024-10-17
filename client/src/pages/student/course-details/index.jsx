@@ -11,8 +11,9 @@ import {
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import VideoPlayer from "@/components/video-player";
+import { AuthContext } from "@/context/auth-context";
 import { StudentContext } from "@/context/student-context";
-import { fetchInstructorCourseDetailsService } from "@/services";
+import { createPaymentService, fetchInstructorCourseDetailsService } from "@/services";
 import { CheckCircle, Globe, Lock, PlayCircle } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
@@ -26,8 +27,10 @@ const StudentCourseDetailsPage = () => {
 		currentCourseDetailsId,
 		setCurrentCourseDetailsId,
 	} = useContext(StudentContext);
+	const { auth } = useContext(AuthContext);
 	const [displayCurrentVideoFreePreview, setDisplayCurrentVideoFreePreview] = useState(null);
 	const [showFreePreviewDialog, setShowFreePreviewDialog] = useState(false);
+	const [approvalUrl, setApprovalUrl] = useState("");
 
 	const { id } = useParams();
 	const location = useLocation();
@@ -53,6 +56,32 @@ const StudentCourseDetailsPage = () => {
 		setDisplayCurrentVideoFreePreview(getCurrentVideoInfo?.videoUrl);
 	};
 
+	const handleCreatePayment = async () => {
+		const paymentPayload = {
+			userId: auth?.user?._id,
+			userName: auth?.user?.username,
+			userEmail: auth?.user?.email,
+			orderStatus: "pending",
+			paymentMethod: "paypal",
+			paymentStatus: "initiated",
+			orderDate: new Date(),
+			paymentId: "",
+			payerId: "",
+			instructorId: studentCourseDetails?.instructorId,
+			instructorName: studentCourseDetails?.instructorName,
+			courseImage: studentCourseDetails?.image,
+			courseTitle: studentCourseDetails?.title,
+			courseId: studentCourseDetails?._id,
+			coursePricing: studentCourseDetails?.pricing,
+		};
+
+		const response = await createPaymentService(paymentPayload);
+		if (response?.success) {
+			sessionStorage.setItem("currentOrderId", JSON.stringify(response?.data?.orderId));
+			setApprovalUrl(response?.data?.approvalUrl);
+		}
+	};
+
 	useEffect(() => {
 		if (id) setCurrentCourseDetailsId(id);
 	}, [id]);
@@ -73,6 +102,10 @@ const StudentCourseDetailsPage = () => {
 	useEffect(() => {
 		if (displayCurrentVideoFreePreview !== null) setShowFreePreviewDialog(true);
 	}, [displayCurrentVideoFreePreview]);
+
+	if (approvalUrl !== "") {
+		window.location.href = approvalUrl;
+	}
 
 	if (loadingState) return <Skeleton />;
 
@@ -163,7 +196,12 @@ const StudentCourseDetailsPage = () => {
 							<div className='mb-4'>
 								<span className='text-3xl font-bold'>${studentCourseDetails?.pricing}</span>
 							</div>
-							<Button className='w-full'>Buy Now</Button>
+							<Button
+								className='w-full'
+								onClick={handleCreatePayment}
+							>
+								Buy Now
+							</Button>
 						</CardContent>
 					</Card>
 				</aside>

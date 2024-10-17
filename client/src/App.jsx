@@ -10,6 +10,7 @@ import InstructorDashboardPage from "./pages/instructor";
 import AddNewCoursePage from "./pages/instructor/AddNewCourse.jsx";
 import StudentCoursesPage from "./pages/student/courses/index.jsx";
 import StudentCourseDetailsPage from "./pages/student/course-details/index.jsx";
+import PaypalPaymentReturnPage from "./pages/student/payment-return/index.jsx";
 
 function App() {
 	const { auth } = useContext(AuthContext);
@@ -80,6 +81,14 @@ function App() {
 					/>
 					<Route
 						path='course/details/:id'
+						element={<StudentCourseDetailsPage />}
+					/>
+					<Route
+						path='payment-return'
+						element={<PaypalPaymentReturnPage />}
+					/>
+					<Route
+						path='student-courses'
 						element={<StudentCourseDetailsPage />}
 					/>
 				</Route>

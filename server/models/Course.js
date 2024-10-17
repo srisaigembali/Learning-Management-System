@@ -26,6 +26,7 @@ const CourseSchema = new mongoose.Schema({
 			studentId: String,
 			studentName: String,
 			studentEmain: String,
+			paidAmount: String,
 		},
 	],
 	curriculum: [LectureSchema],
