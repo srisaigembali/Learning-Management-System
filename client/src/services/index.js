@@ -79,8 +79,8 @@ export const fetchStudentCourseListService = async (query) => {
 	return data;
 };
 
-export const fetchStudentCourseDetailsService = async (id) => {
-	const { data } = await axiosInstance.get(`/student/course/get/details/${id}`);
+export const fetchStudentCourseDetailsService = async (courseId) => {
+	const { data } = await axiosInstance.get(`/student/course/get/details/${courseId}`);
 
 	return data;
 };
@@ -97,5 +97,19 @@ export const captureAndFinalizePaymentService = async (paymentId, payerId, order
 		payerId,
 		orderId,
 	});
+	return data;
+};
+
+export const fetchStudentBoughtCoursesService = async (studentId) => {
+	const { data } = await axiosInstance.get(`/student/bought-courses/get/${studentId}`);
+
+	return data;
+};
+
+export const checkCoursePurchaseInfoService = async (courseId, studentId) => {
+	const { data } = await axiosInstance.get(
+		`/student/course/purchase-info/${courseId}/${studentId}`
+	);
+
 	return data;
 };

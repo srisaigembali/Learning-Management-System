@@ -11,6 +11,8 @@ import AddNewCoursePage from "./pages/instructor/AddNewCourse.jsx";
 import StudentCoursesPage from "./pages/student/courses/index.jsx";
 import StudentCourseDetailsPage from "./pages/student/course-details/index.jsx";
 import PaypalPaymentReturnPage from "./pages/student/payment-return/index.jsx";
+import StudentBoughtCoursesPage from "./pages/student/student-courses/index.jsx";
+import StudentCourseProgressPage from "./pages/student/course-progress/index.jsx";
 
 function App() {
 	const { auth } = useContext(AuthContext);
@@ -89,7 +91,11 @@ function App() {
 					/>
 					<Route
 						path='student-courses'
-						element={<StudentCourseDetailsPage />}
+						element={<StudentBoughtCoursesPage />}
+					/>
+					<Route
+						path='course-progress/:id'
+						element={<StudentCourseProgressPage />}
 					/>
 				</Route>
 				<Route

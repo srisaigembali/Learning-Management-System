@@ -7,6 +7,7 @@ import mediaRouter from "./routes/instructor-routes/mediaRoutes.js";
 import instructorCourseRouter from "./routes/instructor-routes/courseRoutes.js";
 import studentCourseRouter from "./routes/student-routes/courseRoutes.js";
 import studentOrderRouter from "./routes/student-routes/orderRoutes.js";
+import studentBoughtCoursesRouter from "./routes/student-routes/studentCoursesRoutes.js";
 
 dotenv.config();
 
@@ -45,6 +46,7 @@ app.use("/media", mediaRouter);
 app.use("/instructor/course", instructorCourseRouter);
 app.use("/student/course", studentCourseRouter);
 app.use("/student/order", studentOrderRouter);
+app.use("/student/bought-courses", studentBoughtCoursesRouter);
 
 app.listen(PORT, () => {
 	console.log(`server is running on port ${PORT}`);

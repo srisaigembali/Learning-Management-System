@@ -13,10 +13,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import VideoPlayer from "@/components/video-player";
 import { AuthContext } from "@/context/auth-context";
 import { StudentContext } from "@/context/student-context";
-import { createPaymentService, fetchInstructorCourseDetailsService } from "@/services";
+import {
+	checkCoursePurchaseInfoService,
+	createPaymentService,
+	fetchStudentCourseDetailsService,
+} from "@/services";
 import { CheckCircle, Globe, Lock, PlayCircle } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const StudentCourseDetailsPage = () => {
 	const {
@@ -34,14 +38,25 @@ const StudentCourseDetailsPage = () => {
 
 	const { id } = useParams();
 	const location = useLocation();
+	const navigate = useNavigate();
 
 	const getIndexOfFreePreviewUrl =
 		studentCourseDetails !== null
 			? studentCourseDetails?.curriculum?.findIndex((item) => item.freePreview)
 			: -1;
 
-	const fetchStudentCourseDetails = async (id) => {
-		const response = await fetchInstructorCourseDetailsService(id);
+	const fetchStudentCourseDetails = async () => {
+		const checkCoursePurchaseInfoResponse = await checkCoursePurchaseInfoService(
+			currentCourseDetailsId,
+			auth?.user?._id
+		);
+
+		if (checkCoursePurchaseInfoResponse?.success && checkCoursePurchaseInfoResponse?.data) {
+			navigate(`/course-progress/${currentCourseDetailsId}`);
+			return;
+		}
+
+		const response = await fetchStudentCourseDetailsService(currentCourseDetailsId);
 
 		if (response?.success) {
 			setStudentCourseDetails(response?.data);
@@ -88,13 +103,13 @@ const StudentCourseDetailsPage = () => {
 
 	useEffect(() => {
 		if (currentCourseDetailsId) {
-			fetchStudentCourseDetails(currentCourseDetailsId);
+			fetchStudentCourseDetails();
 		}
 	}, [currentCourseDetailsId]);
 
 	useEffect(() => {
 		if (!location.pathname.includes("course/details")) {
-			setCurrentCourseDetailsId(null);
+			setStudentCourseDetails(null);
 			setCurrentCourseDetailsId(null);
 		}
 	}, [location.pathname]);

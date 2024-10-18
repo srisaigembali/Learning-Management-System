@@ -11,8 +11,9 @@ import {
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { filterOptions, sortOptions } from "@/config";
+import { AuthContext } from "@/context/auth-context";
 import { StudentContext } from "@/context/student-context";
-import { fetchStudentCourseListService } from "@/services";
+import { checkCoursePurchaseInfoService, fetchStudentCourseListService } from "@/services";
 import { ArrowUpDownIcon } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -24,6 +25,7 @@ const StudentCoursesPage = () => {
 	const { studentCoursesList, setStudentCoursesList, loadingState, setLoadingState } =
 		useContext(StudentContext);
 	const navigate = useNavigate();
+	const { auth } = useContext(AuthContext);
 
 	const fetchAllStudentViewCourses = async (filters, sort) => {
 		const query = new URLSearchParams({
@@ -70,6 +72,17 @@ const StudentCoursesPage = () => {
 		}
 
 		return queryParams.join("&");
+	};
+
+	const handleCourseNavigate = async (getCurrentCourseId) => {
+		const response = await checkCoursePurchaseInfoService(getCurrentCourseId, auth?.user?._id);
+		if (response?.success) {
+			if (response?.data) {
+				navigate(`/course-progress/${getCurrentCourseId}`);
+			} else {
+				navigate(`/course/details/${getCurrentCourseId}`);
+			}
+		}
 	};
 
 	useEffect(() => {
@@ -171,7 +184,7 @@ const StudentCoursesPage = () => {
 								<Card
 									key={courseItem?._id}
 									className='cursor-pointer'
-									onClick={() => navigate(`/course/details/${courseItem?._id}`)}
+									onClick={() => handleCourseNavigate(courseItem?._id)}
 								>
 									<CardContent className='flex gap-4 p-4'>
 										<div className='w-48 h-32 flex-shrink-0'>
