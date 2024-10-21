@@ -30,7 +30,7 @@ const InstructorDashboardPage = () => {
 			icon: BarChart,
 			label: "Dashboard",
 			value: "dashboard",
-			component: <InstructorDashboard />,
+			component: <InstructorDashboard listOfCourses={instructorCourseList} />,
 		},
 		{
 			icon: Book,
