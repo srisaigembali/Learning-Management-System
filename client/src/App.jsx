@@ -13,11 +13,13 @@ import StudentCourseDetailsPage from "./pages/student/course-details/index.jsx";
 import PaypalPaymentReturnPage from "./pages/student/payment-return/index.jsx";
 import StudentBoughtCoursesPage from "./pages/student/student-courses/index.jsx";
 import StudentCourseProgressPage from "./pages/student/course-progress/index.jsx";
+import { Toaster } from "sonner";
 
 function App() {
 	const { auth } = useContext(AuthContext);
 	return (
 		<>
+			<Toaster richColors />
 			<Routes>
 				<Route
 					path='/auth'

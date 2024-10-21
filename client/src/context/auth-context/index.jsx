@@ -3,6 +3,7 @@ import { initialSignInFormData, initialSignUpFormData } from "@/config";
 import { checkAuthService, loginUserService, registerUserService } from "@/services";
 import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export const AuthContext = createContext(null);
 
@@ -19,6 +20,11 @@ export default function AuthProvider({ children }) {
 	const handleRegisterUser = async (e) => {
 		e.preventDefault();
 		const data = await registerUserService(signUpFormData);
+		if (data?.success) {
+			toast.success(data?.message);
+		} else {
+			toast.error(data?.message);
+		}
 		navigate("/");
 	};
 
@@ -31,11 +37,13 @@ export default function AuthProvider({ children }) {
 				isAuthenticated: true,
 				user: data.data.user,
 			});
+			toast.success(data?.message);
 		} else {
 			setAuth({
 				isAuthenticated: false,
 				user: null,
 			});
+			toast.error(data?.message);
 		}
 	};
 
