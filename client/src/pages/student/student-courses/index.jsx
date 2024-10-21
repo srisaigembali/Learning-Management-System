@@ -29,7 +29,7 @@ const StudentBoughtCoursesPage = () => {
 				{studentBoughtCoursesList && studentBoughtCoursesList.length > 0 ? (
 					studentBoughtCoursesList.map((course) => (
 						<Card
-							key={course.id}
+							key={course.courseId}
 							className='flex flex-col'
 						>
 							<CardContent className='p-4 flex-grow'>
