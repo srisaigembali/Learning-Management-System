@@ -3,15 +3,40 @@ import banner from "../../../../public/banner-img.png";
 import { Button } from "@/components/ui/button";
 import { useContext, useEffect } from "react";
 import { StudentContext } from "@/context/student-context";
-import { fetchStudentCourseListService } from "@/services";
+import { checkCoursePurchaseInfoService, fetchStudentCourseListService } from "@/services";
+import { AuthContext } from "@/context/auth-context";
+import { useNavigate } from "react-router-dom";
 
 const StudentHomePage = () => {
 	const { studentCoursesList, setStudentCoursesList } = useContext(StudentContext);
+	const { auth } = useContext(AuthContext);
+	const navigate = useNavigate();
 
 	const fetchAllStudentViewCourses = async () => {
 		const response = await fetchStudentCourseListService();
 		if (response?.success) {
 			setStudentCoursesList(response?.data);
+		}
+	};
+
+	const handleNavigateToCoursesPage = (getCurrentId) => {
+		sessionStorage.removeItem("filters");
+		const currentFilter = {
+			category: [getCurrentId],
+		};
+
+		sessionStorage.setItem("filters", JSON.stringify(currentFilter));
+		navigate("/courses");
+	};
+
+	const handleCourseNavigate = async (getCurrentCourseId) => {
+		const response = await checkCoursePurchaseInfoService(getCurrentCourseId, auth?.user?._id);
+		if (response?.success) {
+			if (response?.data) {
+				navigate(`/course-progress/${getCurrentCourseId}`);
+			} else {
+				navigate(`/course/details/${getCurrentCourseId}`);
+			}
 		}
 	};
 
@@ -44,6 +69,7 @@ const StudentHomePage = () => {
 							key={categoryItem.id}
 							className='justify-start text-md'
 							variant='outline'
+							onClick={() => handleNavigateToCoursesPage(categoryItem.id)}
 						>
 							{categoryItem.label}
 						</Button>
@@ -56,6 +82,7 @@ const StudentHomePage = () => {
 					{studentCoursesList && studentCoursesList.length > 0 ? (
 						studentCoursesList.map((courseItem) => (
 							<div
+								onClick={() => handleCourseNavigate(courseItem?._id)}
 								key={courseItem?._id}
 								className='border rounded-lg overflow-hidden shadow cursor-pointer'
 							>

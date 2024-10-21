@@ -222,7 +222,7 @@ const StudentCourseProgressPage = () => {
 			</Dialog>
 			<Dialog open={showCourseCompleteDialog}>
 				<DialogContent
-					showoverlay={"false"}
+					showOverlay={false}
 					className='sm:w-[425px]'
 				>
 					<DialogHeader>
