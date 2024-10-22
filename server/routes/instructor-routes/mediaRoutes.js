@@ -3,7 +3,7 @@ import multer from "multer";
 import { delteMediaFromCloudinary, uploadMediaToCloudinary } from "../../helpers/cloudinary.js";
 
 const router = express.Router();
-const upload = multer({ dest: "uploads/" });
+const upload = multer({ dest: "tmp/" });
 
 router.post("/upload", upload.single("file"), async (req, res) => {
 	try {
